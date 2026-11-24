@@ -1,0 +1,9 @@
+# EventMS Git Ignore
+counter_credentials.csv
+*.csv
+*.sql
+*.log
+*.bak
+.env
+backups/
+scratch/

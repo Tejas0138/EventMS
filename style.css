@@ -1,0 +1,881 @@
+/* ==========================================================
+   EventMS - Visitor Gatepass & Entry Validation System
+   Unified Aesthetic: Solid Navy Header (#0f1c30) + Pure White Card Body (#ffffff)
+   ========================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+
+    /* Design Language Colors */
+    --navy-header: #0f1c30;
+    --navy-header-hover: #162844;
+    --card-body-bg: #ffffff;
+    --page-bg: #f1f5f9;
+    --page-bg-alt: #f8fafc;
+
+    --text-primary: #1e293b;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #f8fafc;
+
+    /* Accent Palette */
+    --accent-blue: #1d58d8;
+    --accent-blue-hover: #1545b0;
+    --accent-blue-glow: rgba(29, 88, 216, 0.35);
+    --accent-cyan: #38bdf8;
+    --input-border-blue: #60a5fa;
+
+    /* Status Colors */
+    --status-success: #10b981;
+    --status-warning: #f59e0b;
+    --status-danger: #ef4444;
+
+    /* Structural Rules */
+    --card-radius: 22px;
+    --card-shadow: 0 18px 40px -10px rgba(15, 28, 48, 0.15);
+}
+
+html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================
+   Mobile & Responsive Layout Wrappers
+   ========================================================== */
+.mobile-terminal-wrap {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-top: max(16px, var(--sat));
+    padding-bottom: max(16px, var(--sab));
+    padding-left: max(16px, var(--sal));
+    padding-right: max(16px, var(--sar));
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.desktop-admin-wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    padding-top: max(20px, var(--sat));
+    padding-bottom: max(30px, var(--sab));
+    padding-left: max(16px, var(--sal));
+    padding-right: max(16px, var(--sar));
+}
+
+/* ==========================================================
+   Hybrid Card Architecture: Navy Header + Pure White Body
+   ========================================================== */
+.hybrid-card,
+.gate-card {
+    background: var(--card-body-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    width: 100%;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Navy Header Block */
+.hybrid-header,
+.gate-header-badge {
+    background: var(--navy-header) !important;
+    color: #ffffff !important;
+    border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.35rem 1.25rem 1.2rem;
+    text-align: left;
+    position: relative;
+}
+
+.hybrid-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.18);
+    border: 1.5px solid rgba(56, 189, 248, 0.4);
+    color: var(--accent-cyan);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+}
+
+.hybrid-header-pill {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.15s ease;
+}
+
+.hybrid-header-pill:hover,
+.hybrid-header-pill:focus {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Card Body */
+.hybrid-body,
+.gate-card-body {
+    background: var(--card-body-bg);
+    padding: 1.5rem 1.25rem;
+    border-radius: 0 0 var(--card-radius) var(--card-radius);
+    color: var(--text-primary);
+}
+
+/* ==========================================================
+   Terminal Form Controls & Input Styling
+   ========================================================== */
+.terminal-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 20px;
+    margin-bottom: 8px; /* label -> 8px -> input */
+}
+
+.terminal-input-label {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.digit-counter-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    line-height: 1.4;
+    visibility: hidden; /* Reserved height without layout jump */
+    white-space: nowrap;
+}
+
+.digit-counter-badge.is-valid {
+    background-color: #ecfdf5;
+    color: #059669;
+    border-color: #a7f3d0;
+}
+
+.phone-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px; /* input -> 8px -> helper text */
+}
+
+.phone-input-prefix-box {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none; /* Hidden by default */
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+}
+
+.phone-input-wrap.has-prefix .phone-input-prefix-box,
+.phone-input.has-prefix ~ .phone-input-prefix-box {
+    display: flex;
+}
+
+.phone-input-prefix {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.5px;
+}
+
+.phone-prefix-divider {
+    height: 20px;
+    width: 1.5px;
+    background-color: #cbd5e1;
+    display: inline-block;
+    margin-left: 2px;
+}
+
+.phone-input {
+    height: 52px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #0f172a;
+    letter-spacing: 0;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 0 16px;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, padding-left 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    touch-action: manipulation;
+}
+
+/* Numeric mode with visible +91 prefix */
+.phone-input-wrap.has-prefix .phone-input,
+.phone-input.has-prefix {
+    padding-left: 60px;
+    letter-spacing: 0.5px;
+}
+
+/* Register Id mode (letters, @, _, symbols) */
+.phone-input.user-id-mode {
+    padding-left: 16px;
+    letter-spacing: 0;
+}
+
+/* Placeholder styling: strictly 15px, 400 weight, normal letter-spacing, soft grey, single line */
+.phone-input::placeholder {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 1;
+}
+
+.phone-input::-webkit-input-placeholder {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.phone-input::-moz-placeholder {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 1;
+}
+
+.phone-input:-ms-input-placeholder {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Calm focus state: 2px border in blue + 3px soft outer glow, no heavy shadows */
+.phone-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+.terminal-helper-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #94a3b8;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 16px; /* helper text -> 16px -> primary button */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.terminal-primary-btn-wrap {
+    margin-bottom: 12px; /* primary button -> 12px -> QR button */
+}
+
+.terminal-secondary-btn-wrap {
+    margin-bottom: 0;
+}
+
+
+
+/* ==========================================================
+   Buttons (Primary Royal Blue & Secondary White Pill)
+   ========================================================== */
+/* Primary CTA: Electric Royal Blue */
+.btn-checkin,
+.btn-primary-glow {
+    height: 46px;
+    font-size: 0.96rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 9999px;
+    background: var(--accent-blue) !important;
+    border: none;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px var(--accent-blue-glow);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    touch-action: manipulation;
+}
+
+.btn-checkin:hover,
+.btn-primary-glow:hover {
+    background: var(--accent-blue-hover) !important;
+    box-shadow: 0 6px 22px rgba(29, 88, 216, 0.45);
+    color: #ffffff !important;
+}
+
+.btn-checkin:active,
+.btn-primary-glow:active {
+    transform: scale(0.98);
+}
+
+.btn-checkin:disabled,
+.btn-primary-glow:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Secondary CTA: Clean White Pill Button */
+.btn-pill-white,
+.btn-qr-toggle {
+    height: 40px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: var(--text-dark) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    transition: all 0.15s ease;
+    touch-action: manipulation;
+}
+
+.btn-pill-white:hover,
+.btn-qr-toggle:hover {
+    background: #f8fafc !important;
+    border-color: #94a3b8 !important;
+    color: var(--text-dark) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.btn-pill-white:active,
+.btn-qr-toggle:active {
+    transform: scale(0.98);
+    background: #f1f5f9 !important;
+}
+
+/* Navigation shortcut link */
+.btn-nav-shortcut {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-nav-shortcut:hover {
+    color: var(--accent-blue);
+}
+
+/* ==========================================================
+   Status Alert Cards (Pure White Body Compatible)
+   ========================================================== */
+.result-box {
+    border-radius: 12px;
+    padding: 0.65rem 12px;
+    text-align: center;
+    animation: slideInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 0.65rem;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 1. Entry Approved (Emerald Green Theme for both Day 1 and Day 2) */
+.result-box.status-success,
+.result-box.status-success-teal {
+    background: #ecfdf5;
+    border: 1.5px solid #10b981;
+    color: #064e3b;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);
+}
+
+.status-success .status-icon-circle,
+.status-success-teal .status-icon-circle {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+}
+
+/* 2. Duplicate Blocked (Amber Orange) */
+.result-box.status-duplicate {
+    background: #fffbeb;
+    border: 1.5px solid #f59e0b;
+    color: #78350f;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12);
+}
+
+.status-duplicate .status-icon-circle {
+    background: #f59e0b;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+}
+
+/* 3. Access Denied (Rose Red) */
+.result-box.status-denied {
+    background: #fef2f2;
+    border: 1.5px solid #ef4444;
+    color: #7f1d1d;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.12);
+}
+
+.status-denied .status-icon-circle {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+}
+
+.status-icon-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin: 0 auto 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.result-meta-box {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.3;
+}
+
+.result-meta-row-label {
+    font-weight: 500;
+    color: #64748b;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+}
+
+.result-meta-row-datetime {
+    font-weight: 700;
+    color: #0f1c30;
+    white-space: normal;
+    word-break: normal;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.result-meta-row-phone {
+    font-weight: 700;
+    color: #0f1c30;
+    white-space: nowrap;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+}
+
+/* ==========================================================
+   Modals (Solid Navy Header + Pure White Body)
+   ========================================================== */
+.modal-content.hybrid-modal {
+    border-radius: var(--card-radius);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 25px 50px -12px rgba(15, 28, 48, 0.35);
+    overflow: hidden;
+    background-color: var(--card-body-bg);
+}
+
+.modal-content.hybrid-modal .modal-header {
+    background: var(--navy-header);
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-content.hybrid-modal .modal-body {
+    background: #ffffff;
+    color: var(--text-primary);
+    padding: 1.5rem;
+}
+
+.modal-content.hybrid-modal .modal-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 var(--card-radius) var(--card-radius);
+    padding: 0.85rem 1.5rem;
+}
+
+.qr-frame {
+    background: #ffffff;
+    padding: 0.85rem;
+    border-radius: 16px;
+    display: inline-block;
+    box-shadow: 0 8px 24px rgba(15, 28, 48, 0.08);
+    border: 2px solid #e2e8f0;
+    max-width: 100%;
+}
+
+.qr-frame img,
+.qr-frame svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ==========================================================
+   Crisp Light Admin Tables & Metric Cards
+   ========================================================== */
+.metric-box-white {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 15px rgba(15, 28, 48, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metric-box-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 28, 48, 0.08);
+}
+
+.table-light-crisp {
+    --bs-table-bg: #ffffff;
+    --bs-table-hover-bg: #f8fafc;
+    color: var(--text-dark);
+}
+
+.table-light-crisp thead th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.85rem 1rem;
+}
+
+.table-light-crisp tbody td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Admin Light Badges & Controls */
+.badge-inside-light {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    font-weight: 600;
+}
+
+.badge-pending-light {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    font-weight: 600;
+}
+
+.btn-reset-bulk-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+    border-radius: 9999px;
+    transition: all 0.15s ease;
+}
+
+.btn-reset-bulk-danger:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+}
+
+.search-box-light {
+    background-color: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 9999px;
+    height: 44px;
+    font-size: 0.92rem;
+    color: var(--text-dark) !important;
+    padding-left: 1rem;
+    transition: all 0.2s ease;
+}
+
+.search-box-light:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(29, 88, 216, 0.15) !important;
+    outline: none;
+}
+
+/* Active Inside Gate Pulse Dot */
+.pulse-dot-green {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: pulseDot 1.6s infinite;
+}
+
+@keyframes pulseDot {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+}
+
+/* Print Rules */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    .no-print,
+    header,
+    footer,
+    .navbar,
+    .modal-backdrop,
+    .btn-pill-white,
+    .btn-nav-shortcut {
+        display: none !important;
+    }
+
+    .hybrid-card,
+    .gate-card {
+        box-shadow: none !important;
+        border: 1px solid #000000 !important;
+    }
+}
+
+/* ==========================================================
+   2-Day Terminal Selector Styles (Unified Emerald Theme #10b981)
+   ========================================================== */
+.day-selector-container {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.day-selector-track {
+    display: flex;
+    background: #f1f5f9;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9999px;
+    padding: 3px;
+    gap: 4px;
+    position: relative;
+    z-index: 10;
+}
+
+.day-pill-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0.3rem 0.55rem;
+    min-height: 34px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 11;
+}
+
+.day-pill-btn * {
+    pointer-events: none !important;
+}
+
+.day-pill-btn:hover {
+    color: #0f172a;
+}
+
+.day-pill-btn:active {
+    transform: scale(0.97) !important;
+}
+
+.day-pill-btn.active,
+.day-pill-btn#day1Btn.active,
+.day-pill-btn#day2Btn.active {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35) !important;
+}
+
+/* ==========================================================
+   COE Kit Counter Highlighted Badge Component (Problem 3)
+   ========================================================== */
+.coe-kit-notice-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin: 6px 0;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+.coe-kit-notice-title {
+    font-size: 0.82rem !important;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+}
+.coe-kit-badge-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 3px;
+}
+.coe-kit-counter-pill {
+    background: #1d4ed8 !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    padding: 6px 16px !important;
+    border-radius: 999px !important;
+    letter-spacing: 0.3px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    white-space: normal !important;
+    word-break: break-word;
+    box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
+    line-height: 1.35;
+    border: none !important;
+}
+.coe-kit-subtext {
+    font-size: 0.78rem !important;
+    color: #64748b;
+    margin-top: 3px;
+    line-height: 1.35;
+}

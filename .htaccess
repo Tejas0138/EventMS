@@ -1,0 +1,44 @@
+# ==========================================================
+# EventMS - Apache Configuration
+# ==========================================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Force HTTPS on live environments (excluding localhost and 127.0.0.1)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Prevent access to SQL, log, markdown, credentials, spreadsheets and backup data files
+<FilesMatch "(^\.env|\.(sql|log|md|csv|jsonl|json|bak|zip|xlsx|xls)$|counter_credentials\.csv)">
+    Require all denied
+</FilesMatch>
+
+# Disable raw error display in Apache environments
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_flag log_errors On
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_flag log_errors On
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# Enable Gzip compression if module exists
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
